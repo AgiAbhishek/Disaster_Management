@@ -146,23 +146,34 @@ export async function registerRoutes(app: Express): Promise<Server> {
           
           // If Grok didn't extract a location, try pattern matching immediately
           if (!location) {
-            console.log(`Grok failed to extract location, trying pattern matching on: "${description}"`);
+            console.log(`Attempting pattern matching on: "${description}"`);
             const locationPatterns = [
-              /(Times Square|Central Park|Brooklyn Bridge|Manhattan|Brooklyn|Queens|Bronx|Staten Island)/i,
-              /near ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
+              // Major Indian cities and landmarks
+              /(Mumbai|Delhi|Bangalore|Chennai|Kolkata|Hyderabad|Pune|Ahmedabad|Jaipur|Lucknow|Kanpur|Nagpur|Visakhapatnam|Indore|Thane|Bhopal|Patna|Vadodara|Ghaziabad|Ludhiana|Coimbatore|Agra|Madurai|Nashik|Surat|Kochi|Chandigarh|Gurgaon|Noida)/i,
+              // US cities and landmarks
+              /(Times Square|Central Park|Brooklyn Bridge|Manhattan|Brooklyn|Queens|Bronx|Staten Island|New York)/i,
+              // Location prepositions - capture the location name
               /in ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
               /at ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
-              /([A-Z][a-z]+(?: [A-Z][a-z]+)*) area/i,
+              /near ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
+              /reported in ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
+              /([A-Z][a-z]+(?: [A-Z][a-z]+)*) (area|district|region|city|state|zone)/i,
               /downtown ([A-Z][a-z]+)/i
             ];
             
             for (let i = 0; i < locationPatterns.length; i++) {
               const pattern = locationPatterns[i];
               const match = description.match(pattern);
-              if (match && match[1]) {
-                location = match[1];
-                console.log(`Extracted location using pattern ${i}: ${location}`);
-                break;
+              if (match) {
+                location = match[1] || match[0];
+                // Clean up location name - remove trailing words after location
+                location = location.split(' with')[0].split(' causing')[0].split(' area')[0].trim();
+                // Skip common non-location words
+                const skipWords = ['Emergency', 'Flood', 'Fire', 'Heavy', 'Major', 'Severe', 'Multiple', 'Reported'];
+                if (!skipWords.includes(location)) {
+                  console.log(`Extracted location using pattern ${i}: ${location}`);
+                  break;
+                }
               }
             }
           }
