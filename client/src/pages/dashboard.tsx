@@ -7,6 +7,8 @@ import { ResourceMapping } from "@/components/resource-mapping";
 import { ImageVerification } from "@/components/image-verification";
 import { ReportForm } from "@/components/report-form";
 import { OfficialUpdates } from "@/components/official-updates";
+import { PendingReports } from "@/components/pending-reports";
+import { AvailableResources } from "@/components/available-resources";
 
 export default function Dashboard() {
   // Fetch stats
@@ -103,6 +105,12 @@ export default function Dashboard() {
 
             {/* Image Verification Section */}
             <ImageVerification />
+
+            {/* Pending Reports Section */}
+            <PendingReports />
+
+            {/* Available Resources Section */}
+            <AvailableResources />
           </div>
 
           {/* Sidebar */}
