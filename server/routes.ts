@@ -138,7 +138,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
               await storage.setCacheEntry(cacheKey, { location }, 60); // Cache for 1 hour
             }
           } else {
-            location = cachedResult.value.location;
+            location = (cachedResult.value as any).location;
           }
         } catch (error) {
           console.error("Error extracting location with Gemini:", error);
@@ -166,10 +166,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ message: "Location not found" });
       }
 
-      console.log(`Location geocoded: ${location} -> ${cachedResult.value.latitude}, ${cachedResult.value.longitude}`);
+      const geocodeData = cachedResult.value as any;
+      console.log(`Location geocoded: ${location} -> ${geocodeData.latitude}, ${geocodeData.longitude}`);
       res.json({
         locationName: location,
-        ...cachedResult.value
+        latitude: geocodeData.latitude,
+        longitude: geocodeData.longitude,
+        formattedAddress: geocodeData.formattedAddress
       });
     } catch (error) {
       console.error("Error geocoding location:", error);
@@ -313,8 +316,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
         cachedResult = { value: verification } as any;
       }
 
-      console.log(`Image verified: ${imageUrl} - ${cachedResult.value.isAuthentic ? 'Authentic' : 'Suspicious'}`);
-      res.json(cachedResult.value);
+      if (cachedResult) {
+        const verificationData = cachedResult.value as any;
+        console.log(`Image verified: ${imageUrl} - ${verificationData.isAuthentic ? 'Authentic' : 'Suspicious'}`);
+        res.json(verificationData);
+      } else {
+        res.status(500).json({ message: "Verification failed" });
+      }
     } catch (error) {
       console.error("Error verifying image:", error);
       res.status(500).json({ message: "Failed to verify image" });

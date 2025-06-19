@@ -8,14 +8,14 @@ import { apiRequest } from "@/lib/queryClient";
 import type { Disaster } from "@shared/schema";
 
 export function DisasterList() {
-  const [selectedTag, setSelectedTag] = useState<string>("");
+  const [selectedTag, setSelectedTag] = useState<string>("all");
   const { toast } = useToast();
   const queryClient = useQueryClient();
 
   const { data: disasters = [], isLoading } = useQuery<Disaster[]>({
     queryKey: ['/api/disasters', selectedTag],
     queryFn: async () => {
-      const url = selectedTag ? `/api/disasters?tag=${selectedTag}` : '/api/disasters';
+      const url = selectedTag && selectedTag !== "all" ? `/api/disasters?tag=${selectedTag}` : '/api/disasters';
       const response = await fetch(url);
       if (!response.ok) throw new Error('Failed to fetch disasters');
       return response.json();
@@ -88,7 +88,7 @@ export function DisasterList() {
               <SelectValue placeholder="All Types" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">All Types</SelectItem>
+              <SelectItem value="all">All Types</SelectItem>
               <SelectItem value="flood">Flood</SelectItem>
               <SelectItem value="earthquake">Earthquake</SelectItem>
               <SelectItem value="fire">Fire</SelectItem>
