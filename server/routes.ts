@@ -142,7 +142,32 @@ export async function registerRoutes(app: Express): Promise<Server> {
           }
         } catch (error) {
           console.error("Error extracting location with Gemini:", error);
-          return res.status(400).json({ message: "Failed to extract location from description" });
+          
+          // Fallback: Try basic location pattern matching
+          const locationPatterns = [
+            /in ([A-Z][a-z]+(?: [A-Z][a-z]+)*(?:,? [A-Z]{2})?)/i,
+            /at ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
+            /near ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
+            /([A-Z][a-z]+(?: [A-Z][a-z]+)*) area/i,
+            /downtown ([A-Z][a-z]+)/i,
+            /(Times Square|Central Park|Brooklyn Bridge|Manhattan|Brooklyn|Queens|Bronx|Staten Island)/i
+          ];
+          
+          for (const pattern of locationPatterns) {
+            const match = description.match(pattern);
+            if (match) {
+              location = match[1];
+              console.log(`Extracted location using pattern matching: ${location}`);
+              break;
+            }
+          }
+          
+          if (!location) {
+            return res.status(400).json({ 
+              message: "Unable to extract location from description",
+              suggestion: "Please specify a location like 'Times Square' or 'Downtown Manhattan'"
+            });
+          }
         }
       }
 
