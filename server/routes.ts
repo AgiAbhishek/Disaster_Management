@@ -128,36 +128,41 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       // If no location provided but description is, try to extract it
       if (!location && description) {
+        console.log(`Attempting to extract location from: "${description}"`);
         try {
           const cacheKey = `gemini_location_${Buffer.from(description).toString('base64')}`;
           let cachedResult = await storage.getCacheEntry(cacheKey);
           
           if (!cachedResult) {
             location = await geminiService.extractLocation(description);
+            console.log(`Gemini extracted location: ${location}`);
             if (location) {
               await storage.setCacheEntry(cacheKey, { location }, 60); // Cache for 1 hour
             }
           } else {
             location = (cachedResult.value as any).location;
+            console.log(`Using cached location: ${location}`);
           }
         } catch (error) {
           console.error("Error extracting location with Gemini:", error);
           
           // Fallback: Try basic location pattern matching
+          console.log(`Attempting pattern matching on: "${description}"`);
           const locationPatterns = [
-            /in ([A-Z][a-z]+(?: [A-Z][a-z]+)*(?:,? [A-Z]{2})?)/i,
+            /(Times Square|Central Park|Brooklyn Bridge|Manhattan|Brooklyn|Queens|Bronx|Staten Island)/i,
+            /in ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
             /at ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
             /near ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
             /([A-Z][a-z]+(?: [A-Z][a-z]+)*) area/i,
-            /downtown ([A-Z][a-z]+)/i,
-            /(Times Square|Central Park|Brooklyn Bridge|Manhattan|Brooklyn|Queens|Bronx|Staten Island)/i
+            /downtown ([A-Z][a-z]+)/i
           ];
           
-          for (const pattern of locationPatterns) {
+          for (let i = 0; i < locationPatterns.length; i++) {
+            const pattern = locationPatterns[i];
             const match = description.match(pattern);
-            if (match) {
+            if (match && match[1]) {
               location = match[1];
-              console.log(`Extracted location using pattern matching: ${location}`);
+              console.log(`Extracted location using pattern ${i}: ${location}`);
               break;
             }
           }
