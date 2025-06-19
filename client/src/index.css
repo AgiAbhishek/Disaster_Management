@@ -1,0 +1,175 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: hsl(0, 0%, 100%);
+  --foreground: hsl(20, 14.3%, 4.1%);
+  --muted: hsl(210, 40%, 98%);
+  --muted-foreground: hsl(215, 13.8%, 34.1%);
+  --popover: hsl(0, 0%, 100%);
+  --popover-foreground: hsl(20, 14.3%, 4.1%);
+  --card: hsl(0, 0%, 100%);
+  --card-foreground: hsl(20, 14.3%, 4.1%);
+  --border: hsl(214.3, 31.8%, 91.4%);
+  --input: hsl(214.3, 31.8%, 91.4%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(210, 40%, 98%);
+  --secondary-foreground: hsl(215, 25.1%, 26.7%);
+  --accent: hsl(210, 40%, 98%);
+  --accent-foreground: hsl(215, 25.1%, 26.7%);
+  --destructive: hsl(0, 84.2%, 60.2%);
+  --destructive-foreground: hsl(60, 9.1%, 97.8%);
+  --ring: hsl(20, 14.3%, 4.1%);
+  --radius: 0.5rem;
+  
+  /* Custom disaster response colors */
+  --danger-50: hsl(0, 100%, 97%);
+  --danger-500: hsl(0, 84%, 60%);
+  --danger-600: hsl(0, 72%, 51%);
+  --danger-700: hsl(0, 74%, 42%);
+  
+  --success-50: hsl(138, 76%, 97%);
+  --success-500: hsl(142, 71%, 45%);
+  --success-600: hsl(142, 76%, 36%);
+  
+  --warning-50: hsl(48, 100%, 96%);
+  --warning-500: hsl(43, 96%, 56%);
+  --warning-600: hsl(32, 95%, 44%);
+}
+
+.dark {
+  --background: hsl(240, 10%, 3.9%);
+  --foreground: hsl(0, 0%, 98%);
+  --muted: hsl(240, 3.7%, 15.9%);
+  --muted-foreground: hsl(240, 5%, 64.9%);
+  --popover: hsl(240, 10%, 3.9%);
+  --popover-foreground: hsl(0, 0%, 98%);
+  --card: hsl(240, 10%, 3.9%);
+  --card-foreground: hsl(0, 0%, 98%);
+  --border: hsl(240, 3.7%, 15.9%);
+  --input: hsl(240, 3.7%, 15.9%);
+  --primary: hsl(207, 90%, 54%);
+  --primary-foreground: hsl(211, 100%, 99%);
+  --secondary: hsl(240, 3.7%, 15.9%);
+  --secondary-foreground: hsl(0, 0%, 98%);
+  --accent: hsl(240, 3.7%, 15.9%);
+  --accent-foreground: hsl(0, 0%, 98%);
+  --destructive: hsl(0, 62.8%, 30.6%);
+  --destructive-foreground: hsl(0, 0%, 98%);
+  --ring: hsl(240, 4.9%, 83.9%);
+  
+  /* Dark mode custom colors */
+  --danger-50: hsl(0, 30%, 8%);
+  --danger-500: hsl(0, 84%, 60%);
+  --danger-600: hsl(0, 72%, 51%);
+  --danger-700: hsl(0, 74%, 42%);
+  
+  --success-50: hsl(138, 30%, 8%);
+  --success-500: hsl(142, 71%, 45%);
+  --success-600: hsl(142, 76%, 36%);
+  
+  --warning-50: hsl(48, 30%, 8%);
+  --warning-500: hsl(43, 96%, 56%);
+  --warning-600: hsl(32, 95%, 44%);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply font-sans antialiased bg-slate-50 text-foreground;
+  }
+}
+
+@layer components {
+  .disaster-tag {
+    @apply px-2 py-1 rounded-full text-xs font-medium;
+  }
+  
+  .disaster-tag-flood {
+    background-color: var(--danger-50);
+    color: var(--danger-700);
+  }
+  
+  .disaster-tag-fire {
+    background-color: var(--danger-50);
+    color: var(--danger-700);
+  }
+  
+  .disaster-tag-earthquake {
+    background-color: var(--warning-50);
+    color: var(--warning-600);
+  }
+  
+  .disaster-tag-urgent {
+    background-color: var(--warning-50);
+    color: var(--warning-600);
+  }
+  
+  .disaster-tag-normal {
+    @apply bg-slate-100 text-slate-700;
+  }
+  
+  .priority-official {
+    background-color: var(--success-50);
+    color: var(--success-600);
+  }
+  
+  .priority-priority {
+    background-color: var(--warning-50);
+    color: var(--warning-600);
+  }
+  
+  .priority-normal {
+    @apply bg-slate-100 text-slate-700;
+  }
+  
+  .resource-shelter {
+    background-color: var(--success-50);
+    color: var(--success-600);
+  }
+  
+  .resource-hospital {
+    background-color: var(--primary);
+    color: var(--primary-foreground);
+  }
+  
+  .resource-food {
+    background-color: var(--warning-50);
+    color: var(--warning-600);
+  }
+}
+
+/* Animation for real-time updates */
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out;
+}
+
+/* Pulse animation for live indicators */
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
