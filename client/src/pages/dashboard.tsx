@@ -6,6 +6,7 @@ import { SocialMediaFeed } from "@/components/social-media-feed";
 import { ResourceMapping } from "@/components/resource-mapping";
 import { ImageVerification } from "@/components/image-verification";
 import { ReportForm } from "@/components/report-form";
+import { OfficialUpdates } from "@/components/official-updates";
 
 export default function Dashboard() {
   // Fetch stats
@@ -114,43 +115,7 @@ export default function Dashboard() {
             <ResourceMapping />
 
             {/* Official Updates */}
-            <div className="bg-white rounded-lg shadow-sm border border-slate-200">
-              <div className="px-6 py-4 border-b border-slate-200">
-                <h2 className="text-lg font-semibold text-slate-900">Official Updates</h2>
-              </div>
-              
-              <div className="divide-y divide-slate-200">
-                <div className="p-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-red-100 rounded-full flex items-center justify-center">
-                        <i className="fas fa-university text-red-600 text-sm"></i>
-                      </div>
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium text-slate-900 text-sm">FEMA</p>
-                      <p className="text-sm text-slate-700 mt-1">Emergency shelters activated across NYC. Federal assistance approved for affected areas.</p>
-                      <p className="text-xs text-slate-500 mt-2">15 minutes ago</p>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="p-4">
-                  <div className="flex items-start space-x-3">
-                    <div className="flex-shrink-0">
-                      <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-                        <i className="fas fa-building text-blue-600 text-sm"></i>
-                      </div>
-                    </div>
-                    <div className="flex-1">
-                      <p className="font-medium text-slate-900 text-sm">NYC Emergency Management</p>
-                      <p className="text-sm text-slate-700 mt-1">Flash flood warning extended until 11 PM. Avoid unnecessary travel in affected areas.</p>
-                      <p className="text-xs text-slate-500 mt-2">32 minutes ago</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <OfficialUpdates />
 
             {/* Report Form */}
             <ReportForm />
