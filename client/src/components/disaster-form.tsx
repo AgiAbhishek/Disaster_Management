@@ -53,10 +53,12 @@ export function DisasterForm() {
 
   const handleCityChange = (city: string) => {
     const coords = INDIAN_CITIES[city as keyof typeof INDIAN_CITIES];
+    console.log(`Selected city: ${city}, Coordinates:`, coords);
     if (coords) {
       form.setValue("locationName", city);
       form.setValue("latitude", coords.lat);
       form.setValue("longitude", coords.lon);
+      console.log(`Set coordinates for ${city}: lat=${coords.lat}, lon=${coords.lon}`);
     }
   };
 
@@ -181,12 +183,22 @@ export function DisasterForm() {
                       </SelectTrigger>
                       <SelectContent>
                         {Object.keys(INDIAN_CITIES).map((city) => (
-                          <SelectItem key={city} value={city}>{city}</SelectItem>
+                          <SelectItem key={city} value={city}>
+                            {city}
+                            <span className="text-xs text-muted-foreground ml-2">
+                              ({INDIAN_CITIES[city as keyof typeof INDIAN_CITIES].lat.toFixed(4)}, {INDIAN_CITIES[city as keyof typeof INDIAN_CITIES].lon.toFixed(4)})
+                            </span>
+                          </SelectItem>
                         ))}
                       </SelectContent>
                     </Select>
                   </FormControl>
                   <FormMessage />
+                  {field.value && (
+                    <p className="text-xs text-muted-foreground mt-1">
+                      Coordinates: {INDIAN_CITIES[field.value as keyof typeof INDIAN_CITIES]?.lat}, {INDIAN_CITIES[field.value as keyof typeof INDIAN_CITIES]?.lon}
+                    </p>
+                  )}
                 </FormItem>
               )}
             />
