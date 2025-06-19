@@ -6,11 +6,33 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge";
 import type { Resource } from "@shared/schema";
 
+const INDIAN_CITIES = {
+  "Mumbai": { lat: 19.0596, lon: 72.8295 },
+  "Delhi": { lat: 28.5672, lon: 77.2100 },
+  "Chennai": { lat: 13.0181, lon: 80.2358 },
+  "Bangalore": { lat: 12.8456, lon: 77.6603 },
+  "Kolkata": { lat: 22.5726, lon: 88.3639 },
+  "Pune": { lat: 18.5204, lon: 73.8567 },
+  "Hyderabad": { lat: 17.3850, lon: 78.4867 },
+  "Ahmedabad": { lat: 23.0225, lon: 72.5714 }
+};
+
 export function ResourceMapping() {
-  const [lat, setLat] = useState("40.7128");
-  const [lon, setLon] = useState("-74.0060");
-  const [radius, setRadius] = useState("10");
+  const [selectedCity, setSelectedCity] = useState("Mumbai");
+  const [lat, setLat] = useState("19.0596");
+  const [lon, setLon] = useState("72.8295");
+  const [radius, setRadius] = useState("25");
   const [searchTriggered, setSearchTriggered] = useState(false);
+
+  const handleCityChange = (city: string) => {
+    setSelectedCity(city);
+    const coords = INDIAN_CITIES[city as keyof typeof INDIAN_CITIES];
+    if (coords) {
+      setLat(coords.lat.toString());
+      setLon(coords.lon.toString());
+      setSearchTriggered(true);
+    }
+  };
 
   const { data: resources = [], isLoading, refetch } = useQuery<Resource[]>({
     queryKey: ['/api/resources', lat, lon, radius],
@@ -61,21 +83,17 @@ export function ResourceMapping() {
       <div className="p-6">
         <div className="space-y-2 mb-4">
           <div className="flex items-center space-x-2 text-sm">
-            <label className="text-slate-700 w-16">Location:</label>
-            <Input
-              type="text"
-              value={lat}
-              onChange={(e) => setLat(e.target.value)}
-              className="flex-1 text-xs font-mono"
-              placeholder="Latitude"
-            />
-            <Input
-              type="text"
-              value={lon}
-              onChange={(e) => setLon(e.target.value)}
-              className="flex-1 text-xs font-mono"
-              placeholder="Longitude"
-            />
+            <label className="text-slate-700 w-16">City:</label>
+            <Select value={selectedCity} onValueChange={handleCityChange}>
+              <SelectTrigger className="flex-1">
+                <SelectValue placeholder="Select a city" />
+              </SelectTrigger>
+              <SelectContent>
+                {Object.keys(INDIAN_CITIES).map((city) => (
+                  <SelectItem key={city} value={city}>{city}</SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
           <div className="flex items-center space-x-2 text-sm">
             <label className="text-slate-700 w-16">Radius:</label>
@@ -84,9 +102,9 @@ export function ResourceMapping() {
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="5">5km</SelectItem>
                 <SelectItem value="10">10km</SelectItem>
                 <SelectItem value="25">25km</SelectItem>
+                <SelectItem value="50">50km</SelectItem>
               </SelectContent>
             </Select>
             <Button

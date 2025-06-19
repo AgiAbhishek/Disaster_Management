@@ -7,10 +7,24 @@ import { z } from "zod";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+
+const INDIAN_CITIES = {
+  "Mumbai": { lat: 19.0596, lon: 72.8295 },
+  "Delhi": { lat: 28.5672, lon: 77.2100 },
+  "Chennai": { lat: 13.0181, lon: 80.2358 },
+  "Bangalore": { lat: 12.8456, lon: 77.6603 },
+  "Kolkata": { lat: 22.5726, lon: 88.3639 },
+  "Pune": { lat: 18.5204, lon: 73.8567 },
+  "Hyderabad": { lat: 17.3850, lon: 78.4867 },
+  "Ahmedabad": { lat: 23.0225, lon: 72.5714 },
+  "Jaipur": { lat: 26.9124, lon: 75.7873 },
+  "Lucknow": { lat: 26.8467, lon: 80.9462 }
+};
 
 const formSchema = insertDisasterSchema.extend({
   tags: z.array(z.string()).default([])
@@ -28,14 +42,23 @@ export function DisasterForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      locationName: "",
+      locationName: "Mumbai",
       description: "",
       tags: [],
       ownerId: "netrunnerX",
-      latitude: undefined,
-      longitude: undefined
+      latitude: 19.0596,
+      longitude: 72.8295
     }
   });
+
+  const handleCityChange = (city: string) => {
+    const coords = INDIAN_CITIES[city as keyof typeof INDIAN_CITIES];
+    if (coords) {
+      form.setValue("locationName", city);
+      form.setValue("latitude", coords.lat);
+      form.setValue("longitude", coords.lon);
+    }
+  };
 
   const createDisasterMutation = useMutation({
     mutationFn: async (data: FormData) => {
@@ -147,9 +170,21 @@ export function DisasterForm() {
               name="locationName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Location</FormLabel>
+                  <FormLabel>City</FormLabel>
                   <FormControl>
-                    <Input placeholder="e.g., Manhattan, NYC" {...field} />
+                    <Select value={field.value} onValueChange={(value) => {
+                      field.onChange(value);
+                      handleCityChange(value);
+                    }}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a city" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {Object.keys(INDIAN_CITIES).map((city) => (
+                          <SelectItem key={city} value={city}>{city}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
