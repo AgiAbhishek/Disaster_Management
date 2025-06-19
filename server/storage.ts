@@ -67,29 +67,69 @@ export class MemStorage implements IStorage {
     this.createUser({ username: "reliefAdmin", password: "password", role: "admin" });
     this.createUser({ username: "citizen1", password: "password", role: "contributor" });
 
-    // Initialize with sample resources
+    // Initialize with Indian emergency resources
     this.createResource({
-      name: "Red Cross Emergency Shelter",
-      locationName: "Lower East Side, NYC",
-      latitude: 40.7168,
-      longitude: -73.9861,
+      name: "Mumbai Flood Relief Center",
+      locationName: "Bandra Community Center, Mumbai",
+      latitude: 19.0596,
+      longitude: 72.8295,
       type: "shelter"
     });
 
     this.createResource({
-      name: "Mount Sinai Beth Israel",
-      locationName: "First Avenue, NYC", 
-      latitude: 40.7354,
-      longitude: -73.9754,
-      type: "hospital"
+      name: "Delhi Emergency Medical Center",
+      locationName: "AIIMS Delhi Emergency Wing",
+      latitude: 28.5672,
+      longitude: 77.2100,
+      type: "medical"
     });
 
     this.createResource({
-      name: "Food Distribution Center",
-      locationName: "Community Center, Chinatown",
-      latitude: 40.7158,
-      longitude: -73.9970,
-      type: "food"
+      name: "Chennai Cyclone Evacuation Center",
+      locationName: "Anna University Sports Complex",
+      latitude: 13.0181,
+      longitude: 80.2358,
+      type: "shelter"
+    });
+
+    this.createResource({
+      name: "Bangalore Fire Station",
+      locationName: "Electronic City Fire Station",
+      latitude: 12.8456,
+      longitude: 77.6603,
+      type: "fire"
+    });
+
+    this.createResource({
+      name: "Kolkata Traffic Control Center",
+      locationName: "Kolkata Police Traffic HQ",
+      latitude: 22.5726,
+      longitude: 88.3639,
+      type: "transport"
+    });
+
+    this.createResource({
+      name: "Indian Red Cross - Mumbai",
+      locationName: "Red Cross Bhavan, Mumbai",
+      latitude: 19.0728,
+      longitude: 72.8826,
+      type: "medical"
+    });
+
+    this.createResource({
+      name: "NDRF Station Delhi",
+      locationName: "National Disaster Response Force, Delhi",
+      latitude: 28.6448,
+      longitude: 77.2141,
+      type: "rescue"
+    });
+
+    this.createResource({
+      name: "Chennai Marina Beach Rescue Post",
+      locationName: "Marina Beach Lifeguard Station",
+      latitude: 13.0478,
+      longitude: 80.2785,
+      type: "rescue"
     });
   }
 

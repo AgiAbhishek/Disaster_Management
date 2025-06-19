@@ -77,7 +77,10 @@ Production deployment involves:
 
 ## Changelog
 
-- June 19, 2025. Initial setup
+- June 19, 2025: Initial setup with disaster response platform
+- June 19, 2025: Enhanced with Grok AI integration for location extraction
+- June 19, 2025: Updated resource mapping with authentic Indian emergency resources (Mumbai, Delhi, Chennai, Bangalore, Kolkata) replacing New York mock data
+- June 19, 2025: Fixed nearby resources system to show real-time emergency facilities based on Indian city coordinates
 
 ## User Preferences
 
