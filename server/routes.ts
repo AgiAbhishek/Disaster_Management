@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { storage } from "./storage";
 import { insertDisasterSchema, insertReportSchema, insertResourceSchema } from "@shared/schema";
-import { geminiService } from "./services/gemini";
+import { grokService } from "./services/grok";
 import { geocodingService } from "./services/geocoding";
 import { socialMediaService } from "./services/socialMedia";
 import { initializeWebSocket, getWebSocketService } from "./services/websocket";
@@ -134,8 +134,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
           let cachedResult = await storage.getCacheEntry(cacheKey);
           
           if (!cachedResult) {
-            location = await geminiService.extractLocation(description);
-            console.log(`Gemini extracted location: ${location}`);
+            location = await grokService.extractLocation(description);
+            console.log(`Grok extracted location: ${location}`);
             if (location) {
               await storage.setCacheEntry(cacheKey, { location }, 60); // Cache for 1 hour
             }
@@ -144,9 +144,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
             console.log(`Using cached location: ${location}`);
           }
           
-          // If Gemini didn't extract a location, try pattern matching immediately
+          // If Grok didn't extract a location, try pattern matching immediately
           if (!location) {
-            console.log(`Gemini failed to extract location, trying pattern matching on: "${description}"`);
+            console.log(`Grok failed to extract location, trying pattern matching on: "${description}"`);
             const locationPatterns = [
               /(Times Square|Central Park|Brooklyn Bridge|Manhattan|Brooklyn|Queens|Bronx|Staten Island)/i,
               /near ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
@@ -364,7 +364,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       let cachedResult = await storage.getCacheEntry(cacheKey);
       
       if (!cachedResult) {
-        const verification = await geminiService.verifyImage(imageUrl);
+        const verification = await grokService.verifyImage(imageUrl);
         await storage.setCacheEntry(cacheKey, verification, 60);
         cachedResult = { value: verification } as any;
       }
