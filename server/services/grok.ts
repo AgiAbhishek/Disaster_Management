@@ -2,17 +2,15 @@ import OpenAI from "openai";
 
 const openai = new OpenAI({ 
   baseURL: "https://api.x.ai/v1", 
-  apiKey: process.env.XAI_API_KEY || "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"
+  apiKey: "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"
 });
 
 export class GrokService {
   private apiKey: string;
 
   constructor() {
-    this.apiKey = process.env.XAI_API_KEY || "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";
-    if (!this.apiKey) {
-      console.warn('Grok API key not found. AI features will be limited.');
-    }
+    this.apiKey = "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";
+    console.log('Grok API service initialized successfully');
   }
 
   async extractLocation(description: string): Promise<string | null> {
