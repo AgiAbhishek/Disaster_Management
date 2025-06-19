@@ -143,6 +143,29 @@ export async function registerRoutes(app: Express): Promise<Server> {
             location = (cachedResult.value as any).location;
             console.log(`Using cached location: ${location}`);
           }
+          
+          // If Gemini didn't extract a location, try pattern matching immediately
+          if (!location) {
+            console.log(`Gemini failed to extract location, trying pattern matching on: "${description}"`);
+            const locationPatterns = [
+              /(Times Square|Central Park|Brooklyn Bridge|Manhattan|Brooklyn|Queens|Bronx|Staten Island)/i,
+              /near ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
+              /in ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
+              /at ([A-Z][a-z]+(?: [A-Z][a-z]+)*)/i,
+              /([A-Z][a-z]+(?: [A-Z][a-z]+)*) area/i,
+              /downtown ([A-Z][a-z]+)/i
+            ];
+            
+            for (let i = 0; i < locationPatterns.length; i++) {
+              const pattern = locationPatterns[i];
+              const match = description.match(pattern);
+              if (match && match[1]) {
+                location = match[1];
+                console.log(`Extracted location using pattern ${i}: ${location}`);
+                break;
+              }
+            }
+          }
         } catch (error) {
           console.error("Error extracting location with Gemini:", error);
           
